@@ -1,0 +1,11 @@
+# Replace with the absolute dataset directory on the computer doing the training.
+path: /absolute/path/to/datasets/objects
+train: images/train
+val: images/val
+test: images/test
+
+# EXAMPLE ONLY: replace with your classes in the same order used by your labels.
+names:
+  0: mug
+  1: keys
+  2: remote

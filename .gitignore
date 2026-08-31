@@ -5,4 +5,10 @@ __pycache__/
 models/*.caffemodel
 models/*.prototxt
 captures/
-
+datasets/
+runs/
+*.pt
+!models/apple/best.pt
+*.onnx
+*.egg-info/
+new-photos/

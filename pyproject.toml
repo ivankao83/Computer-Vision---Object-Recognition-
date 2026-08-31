@@ -13,6 +13,9 @@ dependencies = [
   "opencv-python>=4.8,<5",
 ]
 
+[project.optional-dependencies]
+training = ["ultralytics>=8.3,<9"]
+
 [tool.setuptools.packages.find]
 where = ["src"]
 

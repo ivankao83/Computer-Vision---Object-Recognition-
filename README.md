@@ -10,6 +10,25 @@ Camera -> OpenCV frames -> ML model -> bounding box + classification + FPS
 
 The starter implementation uses OpenCV DNN with MobileNet-SSD. It shows live detections, confidence scores, and frame rate, which matches the basic project shown in the reference image.
 
+## Trained Apple Detector
+
+The repository includes the fine-tuned checkpoint at `models/apple/best.pt` (about
+5.5 MB). You do not need the training dataset or another training run to use it.
+See [new-photo and Mac webcam instructions](docs/try-apple-model.md) and the
+[model card](models/apple/README.md) for results, limitations, and attribution.
+
+On a Mac, from the repository folder (use a fresh Mac virtual environment):
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -e ".[training]"
+python -m edge_object_recognition.app --weights models/apple/best.pt --device cpu
+```
+
+Allow camera access when prompted. Press `q` to quit. The CPU command does not
+require NVIDIA/CUDA; Apple Silicon users can also try `--device mps`.
+
 ## Features
 
 - Live camera inference from a USB webcam or Raspberry Pi camera exposed as a video device
@@ -101,9 +120,29 @@ libcamera-hello
 
 Many Pi setups expose the camera through `/dev/video0`. If yours does not, use `libcamera-vid` or Picamera2 to bridge frames into OpenCV before calling the detector.
 
-## Training Your Own Objects Later
+## Train Your Own Objects
 
-For a polished project, collect object images, annotate bounding boxes, train a compact model such as YOLOv8n/YOLO11n or MobileNet-SSD, then export to ONNX or TFLite. Keep the same app structure and replace only the detector implementation.
+Follow [the custom training guide](docs/custom-training.md) to collect your own
+dataset, draw bounding boxes, train YOLO11n, evaluate it, and use the trained
+weights in this app. Both fine-tuning and training from random weights are covered.
+
+For the downloaded apple dataset, see [the apple audit and setup](docs/apple-dataset.md).
+
+Capture raw training images (no model download needed):
+
+```bash
+python -m edge_object_recognition.collect
+```
+
+Run your own trained detection model after installing `pip install -e ".[training]"`:
+
+```bash
+python -m edge_object_recognition.app --weights runs/detect/objects/weights/best.pt
+```
+
+Custom training is optional; the original MobileNet-SSD command still works
+without installing Ultralytics. Training images are not included. The apple
+checkpoint is included; other model files and training outputs remain ignored.
 
 ## Keyboard Controls
 

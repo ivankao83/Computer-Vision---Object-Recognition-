@@ -19,6 +19,8 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--width", type=int, default=640, help="Camera frame width.")
     parser.add_argument("--height", type=int, default=480, help="Camera frame height.")
     parser.add_argument("--model-dir", type=Path, default=Path("models"))
+    parser.add_argument("--weights", type=Path, help="Custom YOLO detection weights (.pt).")
+    parser.add_argument("--device", default="cpu", help="YOLO device: cpu, mps, or 0 for CUDA.")
     parser.add_argument("--confidence", type=float, default=0.5)
     parser.add_argument("--window-name", default="Edge Object Recognition")
     return parser.parse_args()
@@ -26,11 +28,16 @@ def parse_args() -> argparse.Namespace:
 
 def main() -> int:
     args = parse_args()
-    detector = MobileNetSSDDetector(
-        prototxt_path=args.model_dir / DEFAULT_PROTOTXT,
-        model_path=args.model_dir / DEFAULT_MODEL,
-        confidence_threshold=args.confidence,
-    )
+    if args.weights is not None:
+        from .yolo_detector import YOLODetector
+
+        detector = YOLODetector(args.weights, args.confidence, args.device)
+    else:
+        detector = MobileNetSSDDetector(
+            prototxt_path=args.model_dir / DEFAULT_PROTOTXT,
+            model_path=args.model_dir / DEFAULT_MODEL,
+            confidence_threshold=args.confidence,
+        )
     camera = Camera(args.camera, args.width, args.height)
     fps_meter = FpsMeter()
 
@@ -58,4 +65,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
