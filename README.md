@@ -37,13 +37,27 @@ The starter implementation uses OpenCV DNN with MobileNet-SSD. It shows live det
 
 Install Python 3.9+ first if `python --version` does not work in your terminal.
 
-Create a virtual environment:
+The MobileNet-SSD Caffe model requires OpenCV 4.x. OpenCV 5 removed the
+`readNetFromCaffe` loader, so the dependencies constrain OpenCV to versions below 5.
+
+Create a virtual environment on macOS or Linux:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install -r requirements.txt
+python -m pip install -e .
+```
+
+On Windows (PowerShell):
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install --upgrade pip
 python -m pip install -r requirements.txt
+python -m pip install -e .
 ```
 
 Download the starter model:
